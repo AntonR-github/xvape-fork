@@ -23,7 +23,7 @@ export default function Hero() {
           <div className="grid grid-cols-1 lg:grid-cols-2 min-h-full">
 
             {/* Text — first child = right side in RTL */}
-            <div className="flex flex-col items-end text-start justify-start pt-2 pb-24 pe-28 order-first">
+            <div className="flex flex-col items-start text-start justify-start pt-2 pb-24 pe-28 order-first">
               <h1 className="mb-5">
                 הפתרון המתקדם
                 <br />
@@ -32,7 +32,7 @@ export default function Hero() {
               <p className="text-2xl mb-10 max-w-lg" style={{ color: "white" }}>
                 טכנולוגיית אידוי חכמה שמוציאה יותר בכל שאיפה
               </p>
-              <div className="flex items-center gap-3 flex-wrap justify-end w-full">
+              <div className="flex items-center gap-3 flex-wrap justify-start w-full">
                 <Link
                   href="/shop"
                   className="inline-flex items-center gap-2.5 px-6 py-3 rounded-full font-semibold text-black text-sm transition-opacity hover:opacity-85"
