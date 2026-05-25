@@ -19,8 +19,14 @@ const FALLBACK_IMG = "/assets/img/product-test-img.jpeg";
 export default function ProductDetail({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const [selectedThumb, setSelectedThumb] = useState(0);
+  const [selectedVariantIdx, setSelectedVariantIdx] = useState(0);
   const { addItem } = useCart();
   const router = useRouter();
+
+  const hasVariants = product.variants.length > 1;
+  const activeVariant = product.variants[selectedVariantIdx] ?? { id: product.variantId, title: "", price: product.price };
+  const activePrice = activeVariant.price || product.price;
+  const activeVariantId = activeVariant.id || product.variantId;
 
   // Build image list: all product images, or fallback
   const allImages = product.images?.length
@@ -97,8 +103,33 @@ export default function ProductDetail({ product }: { product: Product }) {
 
             {/* Price */}
             <div className="text-4xl font-regular text-black">
-              ₪{product.price}
+              ₪{activePrice}
             </div>
+
+            {/* Variant selector */}
+            {hasVariants && (
+              <div className="flex flex-col gap-2 mt-4">
+                <span className="text-lg font-medium text-black">
+                  צבע: {activeVariant.title}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {product.variants.map((v, idx) => (
+                    <button
+                      key={v.id}
+                      onClick={() => setSelectedVariantIdx(idx)}
+                      className="px-4 py-2 rounded-full text-sm font-semibold border-2 transition-colors"
+                      style={{
+                        borderColor: idx === selectedVariantIdx ? "#c6a87a" : "#d0d0d0",
+                        background: idx === selectedVariantIdx ? "#c6a87a" : "transparent",
+                        color: idx === selectedVariantIdx ? "#000" : "#555",
+                      }}
+                    >
+                      {v.title}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Feature list */}
             <ul className="flex flex-col gap-3 w-full mt-6">
@@ -137,14 +168,24 @@ export default function ProductDetail({ product }: { product: Product }) {
             <div className="flex flex-col-2 gap-3 items-start w-full">
               <button
                 className="px-8 py-4 rounded-full font-regular text-white text-lg tracking-[0.07em] bg-[#1a1a1a] border border-[#1a1a1a] transition-colors hover:bg-white hover:text-black"
-                onClick={() => addItem({ id: product.id, name: product.name, price: product.price, variantId: product.variantId }, qty)}
+                onClick={() => addItem({
+                  id: activeVariantId,
+                  name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
+                  price: activePrice,
+                  variantId: activeVariantId,
+                }, qty)}
               >
-                הוסף לעגלה — ₪{product.price * qty}
+                הוסף לעגלה — ₪{activePrice * qty}
               </button>
               <button
                 className="px-8 py-4 rounded-full font-regular text-lg bg-white border border-[#1a1a1a] text-[#1a1a1a] tracking-[0.07em] transition-colors hover:bg-black hover:text-white"
                 onClick={() => {
-                  addItem({ id: product.id, name: product.name, price: product.price, variantId: product.variantId }, qty);
+                  addItem({
+                    id: activeVariantId,
+                    name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
+                    price: activePrice,
+                    variantId: activeVariantId,
+                  }, qty);
                   router.push("/checkout");
                 }}
               >

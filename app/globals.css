@@ -38,27 +38,38 @@
   --font-sans: "Almoni", Arial, sans-serif;
 
   /* Palette */
-  --color-bg:      #000000;
+  --color-bg: #000000;
   --color-surface: #121212;
-  --color-accent:  #c6a87a;
+  --color-accent: #c6a87a;
   --color-accent-base: #a88f68;
   --color-accent-gradient: linear-gradient(to right, #cdb87e 0%, #d4c08a 35%, #dcc898 65%, #f0e4be 100%);
   --color-surface-gradient: radial-gradient(ellipse 70% 40% at 50% 0%, var(--color-surface) 0%, var(--color-bg) 100%);
-  --color-light:   #eeeeee;
-  --color-white:   #ffffff;
+  --color-light: #eeeeee;
+  --color-white: #ffffff;
 
   /* Type scale */
-  --text-xs:   0.75rem;   /* 12px — captions, labels */
-  --text-sm:   0.875rem;  /* 14px — body small */
-  --text-base: 1rem;      /* 16px — body */
-  --text-lg:   1.125rem;  /* 18px — body large */
-  --text-xl:   1.25rem;   /* 20px — subheadings */
-  --text-2xl:  1.5rem;    /* 24px */
-  --text-3xl:  1.875rem;  /* 30px */
-  --text-4xl:  2.25rem;   /* 36px — section titles */
-  --text-5xl:  3rem;      /* 48px — page headings */
-  --text-6xl:  3.75rem;   /* 60px — hero title */
-  --text-7xl:  4.5rem;    /* 72px — hero title xl */
+  --text-xs: 0.75rem;
+  /* 12px — captions, labels */
+  --text-sm: 0.875rem;
+  /* 14px — body small */
+  --text-base: 1rem;
+  /* 16px — body */
+  --text-lg: 1.125rem;
+  /* 18px — body large */
+  --text-xl: 1.25rem;
+  /* 20px — subheadings */
+  --text-2xl: 1.5rem;
+  /* 24px */
+  --text-3xl: 1.875rem;
+  /* 30px */
+  --text-4xl: 2.25rem;
+  /* 36px — section titles */
+  --text-5xl: 3rem;
+  /* 48px — page headings */
+  --text-6xl: 3.75rem;
+  /* 60px — hero title */
+  --text-7xl: 4.5rem;
+  /* 72px — hero title xl */
 }
 
 /* Layout */
@@ -87,7 +98,7 @@ body {
 
 @media (max-width: 640px) {
   .title-h1 {
-    font-size: clamp(2rem, 8vw, 2.75rem);
+    font-size: clamp(3rem, 10vw, 3.75rem);
     line-height: 1.15;
     letter-spacing: 0;
   }
@@ -105,7 +116,7 @@ body {
 
 @media (max-width: 640px) {
   .title-h2 {
-    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-size: clamp(2rem, 4.8vw, 2rem);
     line-height: 1.2;
     letter-spacing: 0;
   }
@@ -123,7 +134,7 @@ body {
 
 @media (max-width: 640px) {
   .title-h2-black {
-    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-size: clamp(2rem, 4.8vw, 2rem);
     line-height: 1.2;
     letter-spacing: 0;
   }
@@ -141,7 +152,7 @@ body {
 
 @media (max-width: 640px) {
   .title-h3 {
-    font-size: clamp(1.125rem, 3vw, 1.25rem);
+    font-size: clamp(1.5rem, 3.8vw, 1.5rem);
     line-height: 1.3;
     letter-spacing: 0;
   }
@@ -159,7 +170,7 @@ body {
 
 @media (max-width: 640px) {
   .title-h3-black {
-    font-size: clamp(1.125rem, 3vw, 1.25rem);
+    font-size: clamp(1.5rem, 3.8vw, 1.5rem);
     line-height: 1.3;
     letter-spacing: 0;
   }
@@ -177,7 +188,7 @@ body {
 
 @media (max-width: 640px) {
   .paragraph {
-    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    font-size: clamp(1.2rem, 3.4vw, 1.4rem);
     line-height: 1.6;
     letter-spacing: 0;
   }
@@ -195,7 +206,7 @@ body {
 
 @media (max-width: 640px) {
   .paragraph-black {
-    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    font-size: clamp(1.2rem, 3.4vw, 1.4rem);
     line-height: 1.6;
     letter-spacing: 0;
   }
@@ -204,7 +215,7 @@ body {
 .subtitle {
   font-family: "Almoni", Arial, sans-serif;
   font-size: clamp(1.5rem, 3vw, var(--text-3xl));
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.5;
   letter-spacing: 0.01em;
   color: #ffffff;
@@ -226,7 +237,7 @@ body {
 .gradient-border {
   border: 1px solid transparent;
   background: linear-gradient(#121212, #121212) padding-box,
-              var(--color-accent-gradient) border-box;
+    var(--color-accent-gradient) border-box;
 }
 
 button {
@@ -234,7 +245,44 @@ button {
 }
 
 /* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #09090b; }
-::-webkit-scrollbar-thumb { background: #52525b; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #c6a87a; }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #09090b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #52525b;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c6a87a;
+}
+
+/* Hero image container - responsive for all desktop sizes */
+.hero-image-container {
+  position: absolute;
+  top: 0;
+  inset-inline-end: 0;
+  height: 100%;
+  width: clamp(280px, 40%, 560px);
+}
+
+.hero-image {
+  max-height: clamp(500px, 90vh, 90%);
+  object-fit: contain;
+  object-position: bottom;
+}
+
+
+@media (max-width: 1640px) {
+  .hero-image {
+    max-height: clamp(500px, 90vh, 90%);
+    top: -30;
+    object-fit: contain;
+    object-position: bottom;
+  }
+}

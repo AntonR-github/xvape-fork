@@ -1,12 +1,16 @@
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+
+const STORAGE_KEY = "xvape_cart";
 
 export interface CartItem {
   id: string;
   name: string;
   price: number;
   qty: number;
+  variantId?: string;
+  image?: string;
 }
 
 interface CartContextType {
@@ -23,6 +27,22 @@ const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Load from localStorage after mount (SSR-safe)
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) setItems(JSON.parse(stored) as CartItem[]);
+    } catch {}
+    setHydrated(true);
+  }, []);
+
+  // Persist to localStorage — only after hydration so we never overwrite with []
+  useEffect(() => {
+    if (!hydrated) return;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items, hydrated]);
 
   const addItem = (item: Omit<CartItem, "qty">, qty = 1) => {
     setItems((prev) => {

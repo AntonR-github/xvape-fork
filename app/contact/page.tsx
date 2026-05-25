@@ -37,7 +37,7 @@ export default function ContactPage() {
         <div className="px-6 pb-10">
           <form
             onSubmit={handleSubmit}
-            className="max-w-3xl mx-auto rounded-2xl p-8 flex flex-col gap-4"
+            className="max-w-xl mx-auto rounded-2xl p-8 flex flex-col gap-4"
             style={{ background: "#ffffff" }}
           >
             {[
@@ -55,7 +55,7 @@ export default function ContactPage() {
                   placeholder={field.placeholder}
                   value={form[field.name as keyof typeof form]}
                   onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-                  className="w-full bg-transparent outline-none text-start text-lg placeholder:text-start"
+                  className="w-full bg-transparent outline-none text-start text-xl placeholder:text-start"
                   style={{ color: "#111111", caretColor: "#c6a87a" }}
                   dir="rtl"
                 />
@@ -69,7 +69,7 @@ export default function ContactPage() {
                 rows={4}
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
-                className="w-full bg-transparent outline-none resize-none text-start text-lg placeholder:text-start"
+                className="w-full bg-transparent outline-none resize-none text-start text-xl placeholder:text-start"
                 style={{ color: "#111111", caretColor: "#c6a87a" }}
                 dir="rtl"
               />
@@ -79,7 +79,7 @@ export default function ContactPage() {
             <div className="flex justify-center">
               <button
                 type="submit"
-                className="px-10 py-2.5 rounded-full text-lg font-regular text-black transition-opacity hover:opacity-85"
+                className="px-10 py-2.5 rounded-full text-xl font-regular text-black transition-opacity hover:opacity-85"
                 style={{ background: "var(--color-accent-gradient)" }}
               >
                 שליחה
@@ -90,7 +90,7 @@ export default function ContactPage() {
 
         {/* Service info */}
         <div className="text-center pb-14 px-6">
-          <p className="font-bold text-lg text-white mb-1">שירות לקוחות</p>
+          <p className="font-bold text-xl text-white mb-1">שירות לקוחות</p>
           <p className="text-lg mb-2">
             אנחנו כאן! לכל שאלה צרו איתנו קשר
           </p>

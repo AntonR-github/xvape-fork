@@ -27,6 +27,7 @@ interface RawProduct {
   title: string;
   subtitle: string | null;
   description: string | null;
+  material: string | null;
   handle: string;
   thumbnail: string | null;
   images: RawImage[];
@@ -37,25 +38,38 @@ interface RawRegion { id: string; currency_code: string }
 
 // ─── Normalised shape used in the storefront ─────────────────────────────────
 
+export interface ProductVariant {
+  id: string;
+  title: string;
+  price: number;
+}
+
 export interface StoreProduct {
   id: string;
   handle: string;
   name: string;
-  subtitle: string;
+  subtitle?: string;
   description: string;
+  material?: string;
   price: number;
   variantId: string;
   thumbnail: string | null;
   images: string[];
   badge: string;
   features: string[];
+  variants: ProductVariant[];
 }
 
 // ─── Adapter ─────────────────────────────────────────────────────────────────
 
 function adapt(p: RawProduct): StoreProduct {
-  const variant  = p.variants?.[0];
-  const amount   = variant?.calculated_price?.calculated_amount ?? 0;
+  const allVariants: ProductVariant[] = (p.variants ?? []).map((v) => ({
+    id: v.id,
+    title: v.title ?? "",
+    price: Math.round(v.calculated_price?.calculated_amount ?? 0),
+  }));
+
+  const firstVariant = allVariants[0];
 
   return {
     id:          p.id,
@@ -63,12 +77,14 @@ function adapt(p: RawProduct): StoreProduct {
     name:        p.title,
     subtitle:    p.subtitle ?? "",
     description: p.description ?? "",
-    price:       Math.round(amount / 100),
-    variantId:   variant?.id ?? "",
+    material:    p.material ?? "",
+    price:       firstVariant?.price ?? 0,
+    variantId:   firstVariant?.id ?? "",
     thumbnail:   p.thumbnail,
     images:      p.images?.map((i) => i.url) ?? [],
-    badge:       p.subtitle ?? "",
+    badge:       "",
     features:    [],
+    variants:    allVariants,
   };
 }
 
@@ -79,7 +95,9 @@ let cachedRegionId: string | null = null;
 async function getRegionId(): Promise<string> {
   if (cachedRegionId) return cachedRegionId;
   const data = await medusaFetch<{ regions: RawRegion[] }>("/store/regions");
-  cachedRegionId = data.regions?.[0]?.id ?? "";
+  // Prefer ILS region, fall back to first available
+  const ils = data.regions?.find((r) => r.currency_code === "ils");
+  cachedRegionId = (ils ?? data.regions?.[0])?.id ?? "";
   return cachedRegionId;
 }
 

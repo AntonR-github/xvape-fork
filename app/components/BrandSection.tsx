@@ -2,7 +2,12 @@ import Image from "next/image";
 
 function Sparkle({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+    >
       <path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z" />
     </svg>
   );
@@ -39,20 +44,49 @@ export default function BrandSection() {
   return (
     <>
       {/* ── Brand split ── */}
-      {/* py-16 = 64px top/bottom — image uses -my-16 to bleed past it */}
-      <section className="bg-black relative py-16 overflow-visible">
+      {/*
+        py-16 (64px) creates the black top/bottom bars.
+        The surface stripe fills the middle via absolute positioning.
+        On desktop the image bleeds into the black bars via -my-16.
+        On mobile we skip the bleed so it stacks cleanly.
+      */}
+      <section className="bg-black relative py-16 overflow-x-hidden">
 
-        {/* Full-width surface stripe behind the content */}
-        <div className="absolute inset-x-0 top-16 bottom-16" style={{ background: "var(--color-surface)" }} />
+        {/* Surface stripe — spans between the py-16 black bars */}
+        <div
+          className="absolute inset-x-0 top-16 bottom-16"
+          style={{ background: "var(--color-surface)" }}
+        />
 
-        <div className="site-container px-6 lg:px-12 relative z-10">
+        <div className="site-container px-4 sm:px-6 lg:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-            {/* Text — right side in RTL, sits on top of the stripe */}
-            <div className="flex flex-col items-start text-start py-14 px-4 order-first">
-              <Image src="/assets/logo.svg" alt="XVAPE" width={60} height={28} className="h-5 w-auto" />
-              <h2 className="mb-6" style={{ fontSize: "clamp(2.2rem, 3.8vw, 3.6rem)"}}>המותג שמאחורי המכשיר</h2>
-              <p className="paragraph" style={{ fontSize: "clamp(1.2rem, 1.9vw, 1.5rem)" }}>
+            {/* Text side
+                - Mobile:  appears first (order-first), full-width, reduced padding
+                - Desktop: left column (order-first keeps it in place for LTR;
+                           RTL consumers should flip order via CSS or dir attr)
+            */}
+            <div className="flex flex-col items-start text-start py-8 lg:py-14 px-2 sm:px-4 order-first">
+              {/* Logo — explicit bottom margin so spacing doesn't depend solely on h2 */}
+              <Image
+                src="/assets/logo.svg"
+                alt="XVAPE"
+                width={60}
+                height={28}
+                className="h-5 w-auto mb-4"
+              />
+
+              <h2
+                className="mb-4 lg:mb-6"
+                style={{ fontSize: "clamp(1.75rem, 3.8vw, 3.6rem)" }}
+              >
+                המותג שמאחורי המכשיר
+              </h2>
+
+              <p
+                className="paragraph"
+                style={{ fontSize: "clamp(1rem, 1.9vw, 1.5rem)" }}
+              >
                 XVAPE הוא מותג ווופורייזרים העולמי המוביל בתחום האידוי.
                 <br />
                 עם נוכחות ביותר מ-30 מדינות ומיליוני משתמשים ברחבי העולם.
@@ -61,18 +95,29 @@ export default function BrandSection() {
               </p>
             </div>
 
-            {/* Image — bleeds above and below stripe using -my-16 */}
+            {/* Image side
+                - Mobile:  no bleed (my-0), modest height
+                - Desktop: bleeds into black bars via -my-16, tall height
+                  The negative margin is safe here because overflow-x-hidden
+                  on the section prevents any horizontal spill.
+            */}
             <div
-              className="relative rounded-2xl overflow-hidden mt-16"
-              style={{ minHeight: "540px" }}
+              className="
+                relative rounded-2xl overflow-hidden order-last
+                my-0 lg:-my-16
+                min-h-[260px] sm:min-h-[380px] lg:min-h-[540px]
+              "
             >
               <Sparkle className="absolute top-12 inset-e-12 w-4 h-4 text-white opacity-50 z-10" />
               <Sparkle className="absolute top-1/3 inset-s-10 w-3 h-3 text-white opacity-30 z-10" />
               <Sparkle className="absolute bottom-1/4 inset-e-1/3 w-2.5 h-2.5 text-white opacity-20 z-10" />
+
+              {/* Warm glow behind the product */}
               <div
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 w-72 h-20 blur-3xl rounded-full z-0"
                 style={{ background: "rgba(198,168,122,0.15)" }}
               />
+
               <Image
                 src="/assets/img/brand-image.jpg"
                 alt="XVAPE brand"
@@ -86,32 +131,53 @@ export default function BrandSection() {
       </section>
 
       {/* ── Store locator ── */}
-      <section className="py-20 px-6 lg:px-12" style={{ background: "#0d0d0d" }}>
+      <section
+        className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-12"
+        style={{ background: "#0d0d0d" }}
+      >
         <div className="site-container">
 
-          {/* Title */}
-          <h2 className="text-4xl sm:text-5xl font-regular text-white text-center mb-12">
+          {/* Title — responsive type scale, fixed invalid `font-regular` → font-normal */}
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white text-center mb-8 sm:mb-10 lg:mb-12">
             היכן ניתן להשיג
           </h2>
-          
-          {/* Store cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+
+          {/* Store cards
+              1 col → 2 col (sm) → 4 col (lg)
+              Cards scale padding and type between breakpoints
+          */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {stores.map((store) => (
               <div
                 key={store.id}
-                className="rounded-2xl px-6 py-8 flex flex-col items-center text-center gap-3 border transition-colors hover:border-white/15"
-                style={{ background: "#1a1a1a", borderColor: "rgba(255,255,255,0.07)" }}
+                className="
+                  rounded-2xl flex flex-col items-center text-center gap-3 border
+                  px-4 py-6 sm:px-5 sm:py-7 lg:px-6 lg:py-8
+                  transition-colors hover:border-white/15
+                "
+                style={{
+                  background: "#1a1a1a",
+                  borderColor: "rgba(255,255,255,0.07)",
+                }}
               >
                 {/* Icon */}
-                <div className="h-14 flex items-center justify-center">
-                  <Image src={store.icon} alt={store.name} width={64} height={64} className="h-12 w-auto icon-accent" />
+                <div className="h-12 sm:h-14 flex items-center justify-center">
+                  <Image
+                    src={store.icon}
+                    alt={store.name}
+                    width={64}
+                    height={64}
+                    className="h-10 sm:h-12 w-auto icon-accent"
+                  />
                 </div>
 
                 {/* Store name */}
-                <span className="font-bold text-white text-2xl">{store.name}</span>
+                <span className="font-bold text-white text-xl sm:text-2xl">
+                  {store.name}
+                </span>
 
                 {/* Details */}
-                <p className="text-lg leading-relaxed whitespace-pre-line paragraph">
+                <p className="text-base sm:text-lg leading-relaxed whitespace-pre-line paragraph">
                   {store.details}
                 </p>
               </div>

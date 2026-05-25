@@ -1,149 +1,284 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { products } from "../components/ProductCard";
 
-// Max features across all products
 const maxFeatures = Math.max(...products.map((p) => p.features.length));
 
-export default function CompareClient() {
-  const [selectedId, setSelectedId] = useState("fog-pro");
-  const selectedIndex = products.findIndex((p) => p.id === selectedId);
+// ─── Shared row renderer ───────────────────────────────────────────────────
+
+function TableRows({
+  displayProducts,
+  selectedId,
+  colClass,
+  onSelect,
+}: {
+  displayProducts: typeof products;
+  selectedId: string;
+  colClass: "grid-cols-2" | "grid-cols-4";
+  onSelect: (id: string) => void;
+}) {
+  // Guard: never render with undefined items (defensive against bad state)
+  const safeProducts = displayProducts.filter(Boolean);
+  if (safeProducts.length === 0) return null;
 
   return (
-    <section className="py-20 px-6 lg:px-12">
+    <div
+      className="rounded-2xl overflow-hidden border"
+      style={{ borderColor: "rgba(255,255,255,0.07)" }}
+    >
+      {/* ── Product cards: image + name/price + select ── */}
+      <div className={`grid ${colClass} gap-6`}>
+        {safeProducts.map((product, index) => {
+          const isSelected = product.id === selectedId;
+          return (
+            <div
+              key={product.id}
+              className="flex flex-col border rounded-xl p-4"
+              style={{
+                borderColor: isSelected
+                  ? "#c6a87a"
+                  : "rgba(255,255,255,0.07)",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              {/* Right border for all but last */}
+              {index < safeProducts.length - 1 && (
+                <div
+                  className="absolute top-0 bottom-0 right-0 w-px"
+                  style={{ background: "rgba(255,255,255,0.07)" }}
+                />
+              )}
+
+              {/* Image */}
+              <div className="relative w-full rounded-xl overflow-hidden h-[200px] sm:h-[160px] lg:h-[280px] mx-2 sm:mx-3 mt-2">
+                <Image
+                  src="/assets/img/product-test-img.jpeg"
+                  alt={product.name}
+                  fill
+                  className="object-contain p-1"
+                />
+              </div>
+
+              {/* Name + price */}
+              <div className="px-3 sm:px-4 pt-1 pb-0.5 text-start">
+                <span
+                  className="font-light text-xl sm:text-2xl lg:text-3xl leading-snug"
+                  style={{ color: isSelected ? "#c6a87a" : "#ffffff" }}
+                >
+                  {product.name}
+                </span>
+
+                <span className="block font-light text-4xl sm:text-4xl lg:text-4xl text-white">
+                  ₪{product.price}
+                </span>
+              </div>
+
+              {/* Select button */}
+              <div className="px-3 sm:px-12 py-2 mt-auto flex justify-center">
+                <button
+                  onClick={() => onSelect(product.id)}
+                  className="w-full max-w-[120px] sm:max-w-none sm:px-4 lg:px-6 py-1 rounded-full text-lg font-regular border transition-colors"
+                  style={
+                    isSelected
+                      ? {
+                        background: "var(--color-accent-gradient)",
+                        color: "#000000",
+                        borderColor: "transparent",
+                      }
+                      : {
+                        background: "transparent",
+                        borderColor: "rgba(255,255,255,0.2)",
+                        color: "#eeeeee",
+                      }
+                  }
+                >
+                  {isSelected ? "✓ נבחר" : "בחר מוצר"}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── Feature rows (tablet) ── */}
+      <div className="mt-8">
+        {Array.from({ length: maxFeatures }, (_, fi) => (
+          <div
+            key={fi}
+            className={`grid ${colClass} border-b last:border-b-0`}
+            style={{
+              borderColor: "rgba(255,255,255,0.05)",
+              background: fi % 2 === 0 ? "#0d0d0d" : "#111111",
+            }}
+          >
+            {safeProducts.map((product, index) => {
+              const isSelected = product.id === selectedId;
+              return (
+                <div
+                  key={product.id}
+                  className="px-3 sm:px-4 py-2 text-center text-xl sm:text-xl relative"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.05)",
+                    color: "#eeeeee",
+                    opacity: isSelected ? 1 : 0.6,
+                    fontWeight: isSelected ? 400 : 300,
+                    background: isSelected ? "rgba(198,168,122,0.04)" : "transparent",
+                  }}
+                >
+                  {/* Right border for all but last */}
+                  {index < safeProducts.length - 1 && (
+                    <div
+                      className="absolute top-0 bottom-0 right-0 w-px"
+                      style={{ background: "rgba(255,255,255,0.05)" }}
+                    />
+                  )}
+                  {product.features[fi] ?? "—"}
+                </div>
+              );
+            })}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Main page ─────────────────────────────────────────────────────────────
+
+export default function CompareClient() {
+  // ✅ Init from the actual first product instead of a hardcoded id string,
+  //    so it can never mismatch what's in the products array.
+  const [selectedId, setSelectedId] = useState<string>(products[2]?.id ?? "");
+  const [mobileOtherOffset, setMobileOtherOffset] = useState(0);
+
+  // ✅ Safe lookup — falls back to index 0 if id isn't found
+  const selectedIndex = useMemo(() => {
+    const idx = products.findIndex((p) => p.id === selectedId);
+    return idx === -1 ? 0 : idx;
+  }, [selectedId]);
+
+  // Products that aren't the selected one
+  const otherProducts = useMemo(
+    () => products.filter((_, i) => i !== selectedIndex),
+    [selectedIndex]
+  );
+
+  // ✅ Safe offset — guarded against empty otherProducts
+  const safeOffset =
+    otherProducts.length > 0 ? mobileOtherOffset % otherProducts.length : 0;
+
+  // ✅ Both slots guaranteed to be defined before building the array
+  const selectedProduct = products[selectedIndex];
+  const mobileOtherProduct = otherProducts[safeOffset];
+
+  const mobileDisplayProducts = useMemo(() => {
+    if (!selectedProduct || !mobileOtherProduct) return products.slice(0, 2);
+    return [selectedProduct, mobileOtherProduct];
+  }, [selectedProduct, mobileOtherProduct]);
+
+  function handleSelect(id: string) {
+    setSelectedId(id);
+    setMobileOtherOffset(0);
+  }
+
+  function cyclePrev() {
+    if (otherProducts.length === 0) return;
+    setMobileOtherOffset((o) => (o - 1 + otherProducts.length) % otherProducts.length);
+  }
+  function cycleNext() {
+    if (otherProducts.length === 0) return;
+    setMobileOtherOffset((o) => (o + 1) % otherProducts.length);
+  }
+
+  return (
+    <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-12">
       <div className="site-container">
 
         {/* Header */}
-        <div className="text-center mb-14">
+        <div className="text-center mb-10 sm:mb-14">
           <h1 className="title-h2 mb-4">השוואת דגמים</h1>
           <p className="paragraph">
             השוואה ממוקדת של מאידים מובילים כדי לעזור לך לבחור את המוצר המתאים עבורך
           </p>
         </div>
 
-        {/* Unified comparison table */}
-        <div
-          className="rounded-2xl overflow-hidden border"
-          style={{ borderColor: "rgba(255,255,255,0.07)" }}
-        >
-          {/* Row: product images */}
-          <div className="grid grid-cols-4">
-            {products.map((product, i) => {
-              const isSelected = i === selectedIndex;
-              return (
-                <div
-                  key={product.id}
-                  className="p-4 border-b border-e last:border-e-0"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.07)",
-                    borderTopWidth: isSelected ? "2px" : "1px",
-                    borderTopColor: isSelected ? "#c6a87a" : "rgba(255,255,255,0.07)",
-                  }}
-                >
-                  <div className="relative w-full rounded-xl overflow-hidden" style={{ height: "280px" }}>
-                    <Image
-                      src="/assets/img/product-test-img.jpeg"
-                      alt={product.name}
-                      fill
-                      className="object-contain p-2"
-                    />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+        {/* ── Mobile: 2-column table + cycle controls ── */}
+        <div className="lg:hidden">
+          {otherProducts.length > 1 && (
+            <>
+              {/* Cycle header */}
+              <div className="flex items-center justify-center mb-3 px-1">
 
-          {/* Row: name + price */}
-          <div className="grid grid-cols-4 border-b" style={{ borderColor: "rgba(255,255,255,0.07)", background: "#111111" }}>
-            {products.map((product, i) => {
-              const isSelected = i === selectedIndex;
-              return (
-                <div
-                  key={product.id}
-                  className="px-4 py-4 text-start border-e last:border-e-0 flex flex-col gap-1"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.07)",
-                    background: isSelected ? "rgba(198,168,122,0.06)" : "transparent",
-                  }}
-                >
-                  <span className="font-regular text-3xl" style={{ color: isSelected ? "#c6a87a" : "#ffffff" }}>
-                    {product.name}
-                  </span>
-                  <span className="font-regular text-3xl text-white">₪{product.price}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Row: select button */}
-          <div className="grid grid-cols-4 border-b" style={{ borderColor: "rgba(255,255,255,0.07)", background: "#111111" }}>
-            {products.map((product, i) => {
-              const isSelected = i === selectedIndex;
-              return (
-                <div
-                  key={product.id}
-                  className="px-4 py-3 flex justify-center border-e last:border-e-0"
-                  style={{
-                    borderColor: "rgba(255,255,255,0.07)",
-                    background: isSelected ? "rgba(198,168,122,0.06)" : "transparent",
-                  }}
-                >
+                <div className="flex gap-2">
                   <button
-                    onClick={() => setSelectedId(product.id)}
-                    className="px-12 py-2 rounded-full text-base font-semibold border transition-colors"
-                    style={
-                      isSelected
-                        ? { background: "#c6a87a", borderColor: "#c6a87a", color: "#000000" }
-                        : { borderColor: "rgba(255,255,255,0.2)", color: "#eeeeee" }
-                    }
+                    onClick={cycleNext}
+                    className="w-8 h-8 rounded-full border flex items-center justify-center transition-colors hover:border-white/30"
+                    style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgb(255,255,255)" }}
+                    aria-label="דגם הבא"
                   >
-                    בחר מוצר
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-8 h-8">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
                   </button>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Feature rows */}
-          {Array.from({ length: maxFeatures }, (_, fi) => (
-            <div
-              key={fi}
-              className="grid grid-cols-4 border-b last:border-b-0"
-              style={{
-                borderColor: "rgba(255,255,255,0.05)",
-                background: fi % 2 === 0 ? "#0d0d0d" : "#111111",
-              }}
-            >
-              {products.map((product, i) => {
-                const isSelected = i === selectedIndex;
-                return (
-                  <div
-                    key={product.id}
-                    className="px-4 py-4 text-center text-lg border-e last:border-e-0"
-                    style={{
-                      borderColor: "rgba(255,255,255,0.05)",
-                      color: "#eeeeee",
-                      opacity: isSelected ? 1 : 0.6,
-                      fontWeight: isSelected ? 400 : 300,
-                      background: isSelected ? "rgba(198,168,122,0.04)" : "transparent",
-                    }}
+                  <span className="text-base flex items-center justify-center text-center" style={{ color: "rgb(255,255,255)" }}>
+                    השוואה {safeOffset + 1} מתוך {otherProducts.length}
+                  </span>
+                  <button
+                    onClick={cyclePrev}
+                    className="w-8 h-8 rounded-full border flex items-center justify-center transition-colors hover:border-white/30"
+                    style={{ borderColor: "rgba(255,255,255,0.15)", color: "rgb(255,255,255)" }}
+                    aria-label="דגם קודם"
                   >
-                    {product.features[fi] ?? "—"}
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+                    <svg viewBox="0 0 20 20" fill="currentColor" className="w-8 h-8">
+                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+
+                </div>
+              </div>
+
+              {/* Dot indicators */}
+              <div className="flex justify-center gap-1.5 mb-4">
+                {otherProducts.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setMobileOtherOffset(i)}
+                    className="w-1.5 h-1.5 rounded-full transition-colors"
+                    style={{ background: i === safeOffset ? "#c6a87a" : "rgba(255,255,255,0.2)" }}
+                    aria-label={`דגם ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+
+          <TableRows
+            displayProducts={mobileDisplayProducts}
+            selectedId={selectedId}
+            colClass="grid-cols-2"
+            onSelect={handleSelect}
+          />
+        </div>
+
+        {/* ── Desktop: full 4-column table ── */}
+        <div className="hidden lg:block">
+          <TableRows
+            displayProducts={products}
+            selectedId={selectedId}
+            colClass="grid-cols-4"
+            onSelect={handleSelect}
+          />
         </div>
 
         {/* CTA */}
-        <div className="flex justify-center mt-10">
+        <div className="flex justify-center mt-8 sm:mt-10">
           <Link
             href={`/shop/${selectedId}`}
-            className="inline-flex items-center px-8 py-3.5 rounded-full text-base font-semibold transition-opacity hover:opacity-85 text-black"
+            className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-semibold transition-opacity hover:opacity-85 text-black"
             style={{ background: "#c6a87a" }}
           >
             עבור לדף המוצר הנבחר

@@ -7,7 +7,7 @@ import ProductDetail from "./ProductDetail";
 // Pre-generate routes for known products at build time
 export async function generateStaticParams() {
   try {
-    const products = await getProducts();
+    const { products } = await getProducts();
     return products.map((p) => ({ id: p.handle || p.id }));
   } catch {
     return [];

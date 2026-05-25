@@ -9,23 +9,32 @@ const PER_PAGE = 16;
 export default async function ShopPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
 }) {
-  const { page: pageParam } = await searchParams;
+  const { page: pageParam, q } = await searchParams;
+  const query = q?.trim().toLowerCase() ?? "";
 
   // Fetch from Medusa — fall back to mock data if the backend is unreachable
   let allProducts = mockProducts;
   try {
-    const fetched = await getProducts();
-    if (fetched.length > 0) allProducts = fetched;
+    const { products } = await getProducts(100);
+    if (products.length > 0) allProducts = products;
   } catch {
     // backend unreachable — keep mock data
   }
 
-  const totalPages = Math.ceil(allProducts.length / PER_PAGE);
+  // Filter by search query
+  const filtered = query
+    ? allProducts.filter((p) =>
+        p.name.toLowerCase().includes(query) ||
+        p.description?.toLowerCase().includes(query)
+      )
+    : allProducts;
+
+  const totalPages = Math.ceil(filtered.length / PER_PAGE);
   const page = Math.min(Math.max(Number(pageParam) || 1, 1), Math.max(totalPages, 1));
   const start = (page - 1) * PER_PAGE;
-  const pageProducts = allProducts.slice(start, start + PER_PAGE);
+  const pageProducts = filtered.slice(start, start + PER_PAGE);
 
   return (
     <>
@@ -36,10 +45,10 @@ export default async function ShopPage({
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl sm:text-5xl font-black text-black mb-3">
-              בחר את המכשיר שלך
+              {query ? `תוצאות עבור "${q}"` : "בחר את המכשיר שלך"}
             </h1>
             <p className="text-base" style={{ color: "#555555" }}>
-              מהדגם הקומפקטי ועד הפרימיום - לכל משתמש יש את המכשיר המושלם
+              {query ? `נמצאו ${filtered.length} מוצרים` : "מהדגם הקומפקטי ועד הפרימיום - לכל משתמש יש את המכשיר המושלם"}
             </p>
           </div>
 

@@ -1,7 +1,16 @@
 import Link from "next/link";
-import ProductCard, { products } from "./ProductCard";
+import ProductCard, { products as mockProducts } from "./ProductCard";
+import { getProducts } from "../lib/medusa";
 
-export default function ProductCatalog() {
+export default async function ProductCatalog() {
+  let displayProducts = mockProducts;
+  try {
+    const { products } = await getProducts(4);
+    if (products.length > 0) displayProducts = products;
+  } catch {
+    // backend unreachable — keep mock data
+  }
+
   return (
     <section className="bg-white py-20 px-6 lg:px-12">
       <div className="site-container">
@@ -18,7 +27,7 @@ export default function ProductCatalog() {
 
         {/* Product grid — 4 columns on homepage */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {products.map((product) => (
+          {displayProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>

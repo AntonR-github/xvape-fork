@@ -18,12 +18,12 @@ export default function Hero() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative bg-black overflow-hidden min-h-full mt-16">
-        <div className="site-container px-6 lg:px-12 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-full">
-            {/* Text — first child = right side in RTL */}
-            <div className="flex flex-col items-start text-start justify-start pt-2 pb-24 pe-10 lg:pe-12 order-first">
-              <h1 className="title-h1 mb-5">
+      <section className="relative bg-black overflow-hidden">
+        <div className="site-container px-6 lg:px-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] items-start mt-10">
+            {/* Text */}
+            <div className="order-2 lg:order-1 flex flex-col items-start text-start justify-start pt-4 pb-10 lg:pt-2 lg:pb-24">
+              <h1 className="title-h1 mb-5 text-4xl sm:text-5xl lg:text-[clamp(2.25rem,6vw,4.5rem)]">
                 הפתרון המתקדם
                 <br />
                 לבערה הישירה
@@ -31,17 +31,17 @@ export default function Hero() {
               <p className="mb-10 max-w-none lg:whitespace-nowrap subtitle">
                 טכנולוגיית אידוי חכמה שמוציאה יותר בכל שאיפה
               </p>
-              <div className="flex items-center gap-3 flex-wrap justify-start w-full">
+              <div className="flex items-center gap-3 flex-nowrap justify-start w-full">
                 <Link
                   href="/shop"
-                  className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-regular text-black text-xl transition-opacity hover:opacity-85"
+                  className="inline-flex items-center gap-3 px-5 py-3 sm:px-8 sm:py-4 rounded-full font-regular text-black text-base sm:text-xl transition-opacity hover:opacity-85"
                   style={{ background: "var(--color-accent-gradient)" }}
                 >
                   כנס לחנות
                   <svg
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="w-6 h-6"
+                    className="w-5 h-5 sm:w-6 sm:h-6"
                   >
                     <path
                       fillRule="evenodd"
@@ -52,7 +52,7 @@ export default function Hero() {
                 </Link>
                 <Link
                   href="/compare"
-                  className="inline-flex items-center px-8 py-4 rounded-full font-regular text-xl transition-opacity hover:opacity-85"
+                  className="inline-flex items-center px-5 py-3 sm:px-8 sm:py-4 rounded-full font-regular text-base sm:text-xl transition-opacity hover:opacity-85"
                   style={{
                     border: "2px solid transparent",
                     background:
@@ -73,27 +73,25 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Image — second child = left side in RTL */}
-            <div className="relative flex items-end justify-center overflow-hidden">
-              {/* Sparkle stars */}
+            {/* Image */}
+            <div className="order-1 lg:order-2 relative flex items-end justify-center overflow-hidden">
               <Sparkle className="absolute top-20 end-8 w-5 h-5 text-white opacity-60" />
               <Sparkle className="absolute top-1/3 start-6 w-3.5 h-3.5 text-white opacity-35" />
               <Sparkle className="absolute bottom-1/3 end-16 w-2.5 h-2.5 text-white opacity-25" />
               <Sparkle className="absolute bottom-16 start-1/3 w-4 h-4 text-white opacity-40" />
 
-              {/* Bottom glow */}
-              <div
-                className="absolute bottom-0 left-1/2 -translate-x-1/2 w-64 h-32 blur-3xl rounded-full"
-                style={{ background: "rgba(198,168,122,0.2)" }}
-              />
-
-              {/* Hero image — fills the column height */}
               <Image
                 src="/assets/img/hero-product.jpg"
                 alt="מכשיר וייפינג"
-                width={640}
-                height={800}
-                className="relative z-10 object-contain object-bottom drop-shadow-2xl w-auto max-w-[420px] lg:max-w-[540px] max-h-[70vh] lg:max-h-[84vh]"
+                width={800}
+                height={1000}
+                className="relative z-10 drop-shadow-2xl object-contain object-bottom
+                  w-[70vw]      max-h-[80vw]
+                  sm:w-[55vw]   sm:max-h-[65vw]
+                  md:w-[45vw]   md:max-h-[55vw]
+                  lg:w-[420px]  lg:max-h-[72vh]
+                  xl:w-[500px]  xl:max-h-[78vh]
+                  2xl:w-[580px] 2xl:max-h-[84vh]"
                 priority
               />
             </div>
@@ -106,7 +104,7 @@ export default function Hero() {
         className="py-10 mb-16"
         style={{ background: "var(--color-surface-gradient)" }}
       >
-        <div className="site-container px-6 lg:px-12">
+        <div className="site-container  px-6 lg:px-12">
           <h2 className="title-h2 sm:text-4xl text-start mb-4">
             הטכנולוגיה שמשנה את הצריכה
           </h2>
