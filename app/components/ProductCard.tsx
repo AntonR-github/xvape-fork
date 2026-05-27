@@ -20,8 +20,9 @@ export const products: Product[] = [
     thumbnail: null,
     images: [],
     description: "המכשיר שמשנה את חוקי המשחק",
-    features: ["למתחילים" ,"למתחילים", "המכשיר שמשנה את חוקי המשחק", "פשטות ונוחות יזמינות", "פשטות ונוחות יזמינות", "פשטות ונוחות יזמינות", "פשטות ונוחות יזמינות"],
+    features: ["₪299" ,"חום", "תפרחת", "1000mAh", "נורית חיווי", "שנה אחת"],
     variants: [],
+    options: [{ id: "opt_badge", title: "Attribute", value: "Best Value" }],
   },
   {
     id: "prod_aria",
@@ -34,8 +35,9 @@ export const products: Product[] = [
     thumbnail: null,
     images: [],
     description: "ביצועי פרמיום בהישג יד",
-    features: ["פייה זכוכית מובנית", "חיסום מהיר ואחיד", "ביצועי פרמיום בהישג יד", "ביצועי פרמיום בהישג יד", "ביצועי פרמיום בהישג יד", "ביצועי פרמיום בהישג יד"],
+    features: ["₪499" ,"הולכת חום", "תפרחת + מיצויים", "2600mAh", "מסך LED", "שנה אחת"],
     variants: [],
+    options: [{ id: "opt_badge", title: "Attribute", value: "Most Popular" }],
   },
   {
     id: "prod_fog_pro",
@@ -48,8 +50,9 @@ export const products: Product[] = [
     thumbnail: null,
     images: [],
     description: "הד ליון חזק בביצועים. מדויק בטעם.",
-    features: ["מצב טורבו עוצמתי", "טולה נשלפת ונוחה", "חימום מהיר תוך 20 שניות"],
+    features: ["₪549" ,"קונבקציה (Convection)", "תפרחת", "3200mAh נשלפת", "OLED", "שנה אחת"],
     variants: [],
+    options: [{ id: "opt_badge", title: "Attribute", value: "Most Popular" }],
   },
   {
     id: "prod_roffu",
@@ -62,8 +65,9 @@ export const products: Product[] = [
     thumbnail: null,
     images: [],
     description: "פסגת האידוי. טכנולוגיית חיסום חכמה.",
-    features: ["קירור ספירלה מובנה", "אפליקציית שליטה מלאה", "מסך OLED צבעוני", "מסך OLED צבעוני", "מסך OLED צבעוני"],
+    features: ["₪649" ,"קונבקציה (Convection)", "שולחני", "3200mAh נשלפת", "OLED צבעוני", "שנה אחת"],
     variants: [],
+    options: [{ id: "opt_badge", title: "Attribute", value: "Most Popular" }],
   },
 ];
 
@@ -74,6 +78,11 @@ export default function ProductCard({ product }: { product: Product }) {
   const slug = product.handle || product.id;
   const imgSrc = product.thumbnail ?? product.images?.[0] ?? FALLBACK_IMG;
 
+  // Extract badge from options (Medusa product options)
+  // Medusa options have title = attribute name (e.g., "Attribute"), value = the actual text
+  const badgeOption = product.options?.find(opt => opt.title?.toLowerCase() === "attribute");
+  const badgeText = product.badge || badgeOption?.value;
+
   return (
     <div
       className="relative rounded-3xl flex flex-col overflow-hidden"
@@ -81,12 +90,12 @@ export default function ProductCard({ product }: { product: Product }) {
     >
       {/* Product image + badge + name — clickable */}
       <Link href={`/shop/${slug}`} className="relative overflow-hidden rounded-3xl m-3 block" style={{ background: "#ffffff", height: "340px" }}>
-        {product.badge && (
+        {badgeText && (
           <span
             className="absolute top-3 inset-s-3 text-lg font-medium text-white px-3 py-1 rounded-lg z-10"
             style={{ background: "#1a1a1a" }}
           >
-            {product.badge}
+            {badgeText}
           </span>
         )}
         <Image
@@ -94,7 +103,7 @@ export default function ProductCard({ product }: { product: Product }) {
           alt={product.name}
           width={300}
           height={300}
-          className="w-full h-full object-contain p-4"
+          className="w-full h-full object-contain p-4 product-image"
         />
         <h3 className="absolute bottom-3 inset-s-4 text-4xl font-light text-black">{product.name}</h3>
       </Link>
@@ -107,7 +116,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {product.material && (
           <span
             className="inline-flex self-start px-3 py-1 rounded-full text-base font-medium"
-            style={{ background: "var(--color-accent)", color: "#1a1a1a" }}
+            style={{ background: "var(--color-gold)", color: "#1a1a1a" }}
           >
             {product.material}
           </span>
@@ -142,6 +151,8 @@ export default function ProductCard({ product }: { product: Product }) {
           price={product.price}
           variantId={product.variantId}
           image={product.thumbnail ?? product.images?.[0] ?? undefined}
+          description={product.description}
+          material={product.material}
         />
       </div>
     </div>

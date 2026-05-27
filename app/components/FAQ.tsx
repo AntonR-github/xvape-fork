@@ -41,7 +41,7 @@ export default function FAQ() {
   const toggle = (id: string) => setOpenId((prev) => (prev === id ? null : id));
 
   return (
-    <section className="bg-black py-20 px-6 lg:px-12">
+    <section id="faq" className="bg-black py-20 px-6 lg:px-12">
       <div className="max-w-3xl mx-auto">
 
         {/* Header */}
@@ -59,9 +59,8 @@ export default function FAQ() {
                 className="rounded-2xl border overflow-hidden transition-colors"
                 style={{
                   background: "#121212",
-                  borderColor: isOpen
-                    ? "rgba(198,168,122,0.35)"
-                    : "rgba(255,255,255,0.08)",
+                  borderColor: "var(--color-accent)",
+                  borderWidth: "2px",
                 }}
               >
                 {/* Question row */}

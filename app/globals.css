@@ -40,9 +40,16 @@
   /* Palette */
   --color-bg: #000000;
   --color-surface: #121212;
-  --color-accent: #c6a87a;
-  --color-accent-base: #a88f68;
-  --color-accent-gradient: linear-gradient(to right, #cdb87e 0%, #d4c08a 35%, #dcc898 65%, #f0e4be 100%);
+  --color-gold: #c6a87a;
+  --color-accent: #cfbfba;
+  --color-accent-base: #cfbfba;
+  --color-accent-gradient: linear-gradient(
+  to right,
+  #b8a8a3 0%,
+  #c4b4af 30%,
+  #cfbfba 60%,
+  #e2d5d0 100%
+);
   --color-surface-gradient: radial-gradient(ellipse 70% 40% at 50% 0%, var(--color-surface) 0%, var(--color-bg) 100%);
   --color-light: #eeeeee;
   --color-white: #ffffff;
@@ -286,3 +293,20 @@ button {
     object-position: bottom;
   }
 }
+
+/* Cart toast animation */
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+

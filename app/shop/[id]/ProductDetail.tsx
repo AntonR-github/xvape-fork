@@ -106,6 +106,25 @@ export default function ProductDetail({ product }: { product: Product }) {
               ₪{activePrice}
             </div>
 
+            {/* Description */}
+            {product.description && (
+              <p className="text-xl font-regular text-black leading-tight mt-3">
+                {product.description}
+              </p>
+            )}
+
+            {/* Attributes */}
+            {product.material && (
+              <div className="flex flex-col items-start gap-2 w-full mt-4">
+                <span
+                  className="inline-flex self-start px-4 py-1.5 rounded-full text-base font-semibold"
+                  style={{ background: "#c6a87a", color: "#1a1a1a" }}
+                >
+                  {product.material}
+                </span>
+              </div>
+            )}
+
             {/* Variant selector */}
             {hasVariants && (
               <div className="flex flex-col gap-2 mt-4">
@@ -173,6 +192,8 @@ export default function ProductDetail({ product }: { product: Product }) {
                   name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
                   price: activePrice,
                   variantId: activeVariantId,
+                  description: product.description,
+                  material: product.material,
                 }, qty)}
               >
                 הוסף לעגלה — ₪{activePrice * qty}
@@ -185,6 +206,8 @@ export default function ProductDetail({ product }: { product: Product }) {
                     name: `${product.name}${hasVariants ? ` - ${activeVariant.title}` : ""}`,
                     price: activePrice,
                     variantId: activeVariantId,
+                    description: product.description,
+                    material: product.material,
                   }, qty);
                   router.push("/checkout");
                 }}

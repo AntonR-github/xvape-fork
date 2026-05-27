@@ -22,6 +22,8 @@ async function medusaFetch<T>(path: string): Promise<T> {
 
 interface RawImage   { id: string; url: string }
 interface RawVariant { id: string; title: string; calculated_price?: { calculated_amount: number; currency_code: string } }
+interface RawOptionValue { id: string; value: string }
+interface RawOption { id: string; title: string; values: RawOptionValue[] }
 interface RawProduct {
   id: string;
   title: string;
@@ -32,6 +34,7 @@ interface RawProduct {
   thumbnail: string | null;
   images: RawImage[];
   variants: RawVariant[];
+  options?: RawOption[];
 }
 
 interface RawRegion { id: string; currency_code: string }
@@ -58,6 +61,7 @@ export interface StoreProduct {
   badge: string;
   features: string[];
   variants: ProductVariant[];
+  options?: { id: string; title: string; value: string }[];
 }
 
 // ─── Adapter ─────────────────────────────────────────────────────────────────
@@ -70,6 +74,13 @@ function adapt(p: RawProduct): StoreProduct {
   }));
 
   const firstVariant = allVariants[0];
+
+  // Extract options with their first value
+  const options = (p.options ?? []).map((opt) => ({
+    id: opt.id,
+    title: opt.title,
+    value: opt.values?.[0]?.value ?? "",
+  }));
 
   return {
     id:          p.id,
@@ -85,6 +96,7 @@ function adapt(p: RawProduct): StoreProduct {
     badge:       "",
     features:    [],
     variants:    allVariants,
+    options:     options,
   };
 }
 
@@ -106,7 +118,7 @@ async function getRegionId(): Promise<string> {
 export async function getProducts(limit = 100, offset = 0): Promise<{ products: StoreProduct[]; count: number }> {
   const regionId = await getRegionId();
   const data = await medusaFetch<{ products: RawProduct[]; count: number }>(
-    `/store/products?limit=${limit}&offset=${offset}&region_id=${regionId}&fields=*variants.calculated_price`
+    `/store/products?limit=${limit}&offset=${offset}&region_id=${regionId}&fields=*options,*variants.calculated_price`
   );
   return {
     products: data.products.map(adapt),
@@ -116,7 +128,7 @@ export async function getProducts(limit = 100, offset = 0): Promise<{ products: 
 
 export async function getProduct(idOrHandle: string): Promise<StoreProduct | null> {
   const regionId = await getRegionId();
-  const fields = "&fields=*variants.calculated_price";
+  const fields = "&fields=*options,*variants.calculated_price";
 
   // Try by id
   try {

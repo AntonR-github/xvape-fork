@@ -60,8 +60,8 @@ export default function Blog() {
               className="group flex flex-col rounded-2xl overflow-hidden hover:opacity-90 transition-opacity"
               style={{ background: "#111111" }}
             >
-              <div className="relative w-full h-96 shrink-0">
-                <Image src={post.image} alt={post.title} fill className="object-cover" />
+              <div className="relative w-full h-64 shrink-0">
+                <Image src={post.image} alt={post.title} fill className="object-cover product-image" />
               </div>
               <div className="flex flex-col gap-3 text-start px-5 py-6">
                 <h3 className="title-h3 text-white">{post.title}</h3>

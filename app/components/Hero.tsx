@@ -81,11 +81,11 @@ export default function Hero() {
               <Sparkle className="absolute bottom-16 start-1/3 w-4 h-4 text-white opacity-40" />
 
               <Image
-                src="/assets/img/hero-product.jpg"
+                src="/assets/img/hprod.jpg"
                 alt="מכשיר וייפינג"
                 width={800}
                 height={1000}
-                className="relative z-10 drop-shadow-2xl object-contain object-bottom
+                className="relative z-10 drop-shadow-2xl object-contain object-bottom product-image
                   w-[70vw]      max-h-[80vw]
                   sm:w-[55vw]   sm:max-h-[65vw]
                   md:w-[45vw]   md:max-h-[55vw]
@@ -102,7 +102,6 @@ export default function Hero() {
       {/* ── Tech section ── */}
       <section
         className="py-10 mb-16"
-        style={{ background: "var(--color-surface-gradient)" }}
       >
         <div className="site-container  px-6 lg:px-12">
           <h2 className="title-h2 sm:text-4xl text-start mb-4">

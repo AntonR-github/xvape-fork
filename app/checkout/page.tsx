@@ -16,14 +16,14 @@ function FormField({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm sm:text-xs font-semibold text-start" style={{ color: "#555555" }}>{label}</label>
+      <label className="text-sm sm:text-lg font-semibold text-start" style={{ color: "#555555" }}>{label}</label>
       <input
         type={type} name={name} value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         dir="rtl"
-        className="w-full rounded-xl border px-4 py-3 text-base sm:text-sm text-start outline-none transition-colors"
-        style={{ borderColor: "#e0e0e0", background: "#fafafa", caretColor: "#c6a87a" }}
+        className="w-full rounded-xl border px-4 py-3 text-base sm:text-lg text-start outline-none transition-colors"
+        style={{ borderColor: "#e0e0e0", background: "#fafafa", caretColor: "#c6a87a", color: "black" }}
       />
     </div>
   );
@@ -67,7 +67,7 @@ export default function CheckoutPage() {
                   <button
                     key={s}
                     onClick={() => setStep(s)}
-                    className="px-5 py-2 rounded-full text-base sm:text-sm font-semibold border transition-colors"
+                    className="px-5 py-2 rounded-full text-base sm:text-lg font-semibold border transition-colors"
                     style={
                       step === s
                         ? { background: "#c6a87a", borderColor: "#c6a87a", color: "#000" }
@@ -84,7 +84,7 @@ export default function CheckoutPage() {
                   className="rounded-2xl border p-5 sm:p-7 flex flex-col gap-5"
                   style={{ borderColor: "#eeeeee" }}
                 >
-                  <h2 className="font-black text-black text-start text-xl sm:text-lg">פרטים אישיים</h2>
+                  <h2 className="font-black text-black text-start text-xl sm:text-xl">פרטים אישיים</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-start">
                     <FormField label="שם פרטי" name="firstName" value={form.firstName} onChange={set("firstName")} />
                     <FormField label="שם משפחה" name="lastName" value={form.lastName} onChange={set("lastName")} />
@@ -92,7 +92,7 @@ export default function CheckoutPage() {
                   <FormField label="אימייל" name="email" type="email" value={form.email} onChange={set("email")} />
                   <FormField label="טלפון" name="phone" type="tel" value={form.phone} onChange={set("phone")} />
 
-                  <h2 className="font-black text-black text-start text-xl sm:text-lg pt-2">כתובת למשלוח</h2>
+                  <h2 className="font-black text-black text-start text-xl sm:text-xl pt-2">כתובת למשלוח</h2>
                   <FormField label="כתובת" name="address" value={form.address} onChange={set("address")} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField label="עיר" name="city" value={form.city} onChange={set("city")} />
@@ -101,7 +101,7 @@ export default function CheckoutPage() {
 
                   <button
                     onClick={() => setStep("payment")}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-sm font-bold text-black mt-2 transition-opacity hover:opacity-85"
+                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85"
                     style={{ background: "#c6a87a" }}
                   >
                     המשך לתשלום
@@ -123,7 +123,7 @@ export default function CheckoutPage() {
 
                   <button
                     onClick={handleConfirm}
-                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-sm font-bold text-black mt-2 transition-opacity hover:opacity-85"
+                    className="w-full sm:w-auto sm:self-start px-8 py-3.5 rounded-full text-base sm:text-lg font-bold text-black mt-2 transition-opacity hover:opacity-85"
                     style={{ background: "#c6a87a" }}
                   >
                     אשר הזמנה
@@ -137,10 +137,10 @@ export default function CheckoutPage() {
               className="rounded-2xl border p-5 sm:p-6 flex flex-col gap-4 h-fit order-1 lg:order-2"
               style={{ background: "#f9f9f9", borderColor: "#eeeeee" }}
             >
-              <h2 className="font-black text-black text-xl sm:text-lg text-start">סיכום הזמנה</h2>
+              <h2 className="font-black text-black text-xl sm:text-xl text-start">סיכום הזמנה</h2>
 
               {items.length > 0 && (
-                <div className="flex flex-col gap-2 text-base sm:text-sm border-b pb-4" style={{ borderColor: "#eeeeee" }}>
+                <div className="flex flex-col gap-2 text-base sm:text-lg border-b pb-4" style={{ borderColor: "#eeeeee" }}>
                   {items.map((item) => (
                     <div key={item.id} className="flex justify-between gap-2">
                       <span className="shrink-0" style={{ color: "#777" }}>× {item.qty}</span>
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              <div className="flex flex-col gap-2 text-base sm:text-sm">
+              <div className="flex flex-col gap-2 text-base sm:text-lg">
                 <div className="flex justify-between">
                   <span style={{ color: "#777777" }}>סכום ביניים</span>
                   <span className="font-semibold text-black">₪{total}</span>

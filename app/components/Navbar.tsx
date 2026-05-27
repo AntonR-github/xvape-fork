@@ -22,7 +22,7 @@ function MenuIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.8}
       stroke="currentColor"
-      className="w-10 h-10"
+      className="w-12 h-12"
     >
       <path
         strokeLinecap="round"
@@ -41,7 +41,7 @@ function CloseIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.8}
       stroke="currentColor"
-      className="w-10 h-10"
+      className="w-12 h-12"
     >
       <path
         strokeLinecap="round"
@@ -128,7 +128,7 @@ export default function Navbar() {
             {cartCount > 0 && (
               <span
                 className="absolute top-0.5 inset-e-0.5 text-black text-[10px] font-bold min-w-[16px] h-4 rounded-full flex items-center justify-center px-0.5"
-                style={{ background: "#c6a87a" }}
+                style={{ background: "#cfbfba" }}
               >
                 {cartCount}
               </span>
@@ -154,7 +154,7 @@ export default function Navbar() {
             aria-label="חיפוש"
             onClick={() => setSearchOpen(true)}
           >
-            <Image src="/assets/icn/search.png" alt="חיפוש" width={26} height={26} className="icon-accent" />
+            <Image src="/assets/icn/search.png" alt="חיפוש" width={32} height={32} className="icon-accent" />
           </button>
 
           {/* Cart */}
@@ -163,11 +163,11 @@ export default function Navbar() {
             className="relative p-2"
             aria-label="עגלת קניות"
           >
-            <Image src="/assets/icn/cart.png" alt="עגלה" width={26} height={26} className="icon-accent" />
+            <Image src="/assets/icn/cart.png" alt="עגלה" width={32} height={32} className="icon-accent" />
             {cartCount > 0 && (
               <span
-                className="absolute top-0.5 inset-e-0.5 text-black text-[10px] font-bold min-w-[16px] h-4 rounded-full flex items-center justify-center px-0.5"
-                style={{ background: "#c6a87a" }}
+                className="absolute top-0.5 inset-e-0.5 text-black text-[22px] font-bold min-w-[20px] h-5 rounded-full flex items-center justify-center px-0.5"
+                style={{ background: "#cfbfba" }}
               >
                 {cartCount}
               </span>
@@ -177,8 +177,8 @@ export default function Navbar() {
           {/* CTA button — outlined gold, desktop only */}
           <Link
             href="/shop"
-            className="inline-flex items-center px-5 py-2 rounded-full text-base font-semibold border transition-colors hover:bg-white/5"
-            style={{ color: "#c6a87a", borderColor: "#c6a87a" }}
+            className="inline-flex items-center px-5 py-2 rounded-full text-lg font-regular border transition-colors hover:bg-white/5"
+            style={{ color: "#cfbfba", borderColor: "#cfbfba" }}
           >
             כנס לחנות
           </Link>
@@ -210,7 +210,7 @@ export default function Navbar() {
               <Link
                 href="/shop"
                 className="inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold border"
-                style={{ color: "#c6a87a", borderColor: "#c6a87a" }}
+                style={{ color: "#cfbfba", borderColor: "#cfbfba" }}
                 onClick={() => setMobileOpen(false)}
               >
                 כנס לחנות

@@ -11,6 +11,8 @@ export interface CartItem {
   qty: number;
   variantId?: string;
   image?: string;
+  description?: string;
+  material?: string;
 }
 
 interface CartContextType {
@@ -21,6 +23,9 @@ interface CartContextType {
   clearCart: () => void;
   total: number;
   count: number;
+  showToast: boolean;
+  toastMessage: string;
+  hideToast: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -28,6 +33,8 @@ const CartContext = createContext<CartContextType | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
 
   // Load from localStorage after mount (SSR-safe)
   useEffect(() => {
@@ -54,6 +61,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...prev, { ...item, qty }];
     });
+    setToastMessage(`המוצר "${item.name}" נוסף לעגלה`);
+    setShowToast(true);
   };
 
   const removeItem = (id: string) => {
@@ -72,7 +81,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addItem, removeItem, updateQty, clearCart, total, count }}
+      value={{ items, addItem, removeItem, updateQty, clearCart, total, count, showToast, toastMessage, hideToast: () => setShowToast(false) }}
     >
       {children}
     </CartContext.Provider>

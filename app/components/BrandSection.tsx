@@ -44,15 +44,8 @@ export default function BrandSection() {
   return (
     <>
       {/* ── Brand split ── */}
-      {/*
-        py-16 (64px) creates the black top/bottom bars.
-        The surface stripe fills the middle via absolute positioning.
-        On desktop the image bleeds into the black bars via -my-16.
-        On mobile we skip the bleed so it stacks cleanly.
-      */}
       <section className="bg-black relative py-16 overflow-x-hidden">
 
-        {/* Surface stripe — spans between the py-16 black bars */}
         <div
           className="absolute inset-x-0 top-16 bottom-16"
           style={{ background: "var(--color-surface)" }}
@@ -61,11 +54,6 @@ export default function BrandSection() {
         <div className="site-container px-4 sm:px-6 lg:px-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
 
-            {/* Text side
-                - Mobile:  appears first (order-first), full-width, reduced padding
-                - Desktop: left column (order-first keeps it in place for LTR;
-                           RTL consumers should flip order via CSS or dir attr)
-            */}
             <div className="flex flex-col items-start text-start py-8 lg:py-14 px-2 sm:px-4 order-first">
               {/* Logo — explicit bottom margin so spacing doesn't depend solely on h2 */}
               <Image
@@ -95,12 +83,6 @@ export default function BrandSection() {
               </p>
             </div>
 
-            {/* Image side
-                - Mobile:  no bleed (my-0), modest height
-                - Desktop: bleeds into black bars via -my-16, tall height
-                  The negative margin is safe here because overflow-x-hidden
-                  on the section prevents any horizontal spill.
-            */}
             <div
               className="
                 relative rounded-2xl overflow-hidden order-last
@@ -122,7 +104,7 @@ export default function BrandSection() {
                 src="/assets/img/brand-image.jpg"
                 alt="XVAPE brand"
                 fill
-                className="object-contain"
+                className="object-contain product-image"
               />
             </div>
 
@@ -141,11 +123,7 @@ export default function BrandSection() {
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-white text-center mb-8 sm:mb-10 lg:mb-12">
             היכן ניתן להשיג
           </h2>
-
-          {/* Store cards
-              1 col → 2 col (sm) → 4 col (lg)
-              Cards scale padding and type between breakpoints
-          */}
+          
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             {stores.map((store) => (
               <div

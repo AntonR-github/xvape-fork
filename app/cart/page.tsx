@@ -17,7 +17,7 @@ function TrashIcon() {
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"
-      className="w-4 h-4"
+      className="w-6 h-6"
     >
       <path
         strokeLinecap="round"
@@ -66,7 +66,7 @@ export default function CartPage() {
                   >
                     {/* Image — first in DOM = far RIGHT in RTL */}
                     <div
-                      className="w-20 h-20 rounded-xl shrink-0 overflow-hidden flex items-center justify-center"
+                      className="w-32 h-32 rounded-xl shrink-0 overflow-hidden flex items-center justify-center"
                       style={{ background: "#f2f2f2" }}
                     >
                       <Image
@@ -81,35 +81,55 @@ export default function CartPage() {
                     {/* Content — flex-1 middle */}
                     <div className="flex-1 flex flex-col gap-2.5 min-w-0">
                       {/* Name */}
-                      <span className="font-bold text-black text-start text-xl sm:text-lg leading-tight">
+                      <span className="font-bold text-black text-start text-xl sm:text-2xl leading-tight">
                         {item.name}
                       </span>
 
-                      {/* Price */}
-                      <span className="font-black text-black text-xl sm:text-lg">
-                        ₪{item.price * item.qty}
-                      </span>
-
-                      {/* Qty pill */}
-                      <div
-                        className="flex items-center gap-2.5 border rounded-full px-3.5 py-1.5 self-start"
-                        style={{ borderColor: "#d0d0d0" }}
-                      >
-                        <button
-                          onClick={() => updateQty(item.id, item.qty + 1)}
-                          className="text-xl sm:text-lg font-bold text-black hover:opacity-60 leading-none"
-                        >
-                          +
-                        </button>
-                        <span className="w-5 text-center text-lg sm:text-base font-semibold text-black">
-                          {item.qty}
+                      {/* Description */}
+                      {item.description && (
+                        <span className="font-medium text-black text-start text-base sm:text-sm leading-tight line-clamp-2">
+                          {item.description}
                         </span>
-                        <button
-                          onClick={() => updateQty(item.id, item.qty - 1)}
-                          className="text-xl sm:text-lg font-bold text-black hover:opacity-60 leading-none"
+                      )}
+
+                      {/* Material */}
+                      {item.material && (
+                        <span
+                          className="inline-flex self-start px-3 py-1 rounded-full text-sm font-semibold"
+                          style={{ background: "#c6a87a", color: "#1a1a1a" }}
                         >
-                          −
-                        </button>
+                          {item.material}
+                        </span>
+                      )}
+
+                      {/* Price & Qty on same row */}
+                      <div className="flex items-center justify-between w-full">
+                        {/* Price */}
+                        <span className="font-black text-black text-xl sm:text-2xl">
+                          ₪{item.price * item.qty}
+                        </span>
+
+                        {/* Qty pill */}
+                        <div
+                          className="flex items-center gap-2.5 border rounded-full px-3.5 py-1.5"
+                          style={{ borderColor: "#d0d0d0" }}
+                        >
+                          <button
+                            onClick={() => updateQty(item.id, item.qty + 1)}
+                            className="text-xl sm:text-xl font-bold text-black hover:opacity-60 leading-none"
+                          >
+                            +
+                          </button>
+                          <span className="w-6 text-center text-lg sm:text-base font-semibold text-black">
+                            {item.qty}
+                          </span>
+                          <button
+                            onClick={() => updateQty(item.id, item.qty - 1)}
+                            className="text-xl sm:text-xl font-bold text-black hover:opacity-60 leading-none"
+                          >
+                            −
+                          </button>
+                        </div>
                       </div>
                     </div>
 
@@ -138,12 +158,12 @@ export default function CartPage() {
                 className="rounded-2xl p-5 sm:p-6 flex flex-col gap-4 h-fit border"
                 style={{ background: "#f9f9f9", borderColor: "#eeeeee" }}
               >
-                <h2 className="font-black text-black text-xl sm:text-lg text-end">
+                <h2 className="font-black text-black text-xl sm:text-xl text-end">
                   סיכום הזמנה
                 </h2>
 
                 <div
-                  className="flex flex-col gap-3 text-base sm:text-sm border-b pb-4"
+                  className="flex flex-col gap-3 text-base sm:text-lg border-b pb-4"
                   style={{ borderColor: "#eeeeee" }}
                 >
                   <div className="flex justify-between">
@@ -158,7 +178,7 @@ export default function CartPage() {
                   </div>
                   {shipping > 0 && (
                     <p
-                      className="text-xs text-end"
+                      className="text-base text-end"
                       style={{ color: "#c6a87a" }}
                     >
                       הוסף ₪{FREE_SHIPPING_THRESHOLD - total} למשלוח חינם
@@ -166,14 +186,14 @@ export default function CartPage() {
                   )}
                 </div>
 
-                <div className="flex justify-between font-black text-black text-xl sm:text-lg">
+                <div className="flex justify-between font-black text-black text-xl sm:text-xl">
                   <span>סה״כ</span>
                   <span>₪{total + shipping}</span>
                 </div>
 
                 <Link
                   href="/checkout"
-                  className="w-full py-3.5 rounded-full font-bold text-base sm:text-sm text-black text-center transition-opacity hover:opacity-85 mt-1"
+                  className="w-full py-3.5 rounded-full font-bold text-base sm:text-lg text-black text-center transition-opacity hover:opacity-85 mt-1"
                   style={{ background: "#c6a87a" }}
                 >
                   עבור לקופה

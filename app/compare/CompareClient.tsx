@@ -7,7 +7,15 @@ import { products } from "../components/ProductCard";
 
 const maxFeatures = Math.max(...products.map((p) => p.features.length));
 
-// ─── Shared row renderer ───────────────────────────────────────────────────
+// Map product IDs to their correct shop URLs
+const productUrlMap: Record<string, string> = {
+  prod_fog_pro: "/shop/fog-pro",
+  prod_roffu: "/shop/xvape-roffu",
+  prod_aria: "/shop/aria-plus",
+  prod_lanza: "/shop/lanza",
+};
+
+// ─── Mobile rows renderer ───────────────────────────────────────────────────
 
 function TableRows({
   displayProducts,
@@ -29,7 +37,7 @@ function TableRows({
       className="rounded-2xl overflow-hidden border"
       style={{ borderColor: "rgba(255,255,255,0.07)" }}
     >
-      {/* ── Product cards: image + name/price + select ── */}
+      {/* Product cards: image + name/price + select */}
       <div className={`grid ${colClass} gap-6`}>
         {safeProducts.map((product, index) => {
           const isSelected = product.id === selectedId;
@@ -56,7 +64,7 @@ function TableRows({
               {/* Image */}
               <div className="relative w-full rounded-xl overflow-hidden h-[200px] sm:h-[160px] lg:h-[280px] mx-2 sm:mx-3 mt-2">
                 <Image
-                  src="/assets/img/product-test-img.jpeg"
+                  src={product.thumbnail ?? product.images?.[0] ?? "/assets/img/product-test-img.jpeg"}
                   alt={product.name}
                   fill
                   className="object-contain p-1"
@@ -85,7 +93,7 @@ function TableRows({
                   style={
                     isSelected
                       ? {
-                        background: "var(--color-accent-gradient)",
+                        background: "var(--color-gold)",
                         color: "#000000",
                         borderColor: "transparent",
                       }
@@ -104,7 +112,7 @@ function TableRows({
         })}
       </div>
 
-      {/* ── Feature rows (tablet) ── */}
+      {/* Feature rows */}
       <div className="mt-8">
         {Array.from({ length: maxFeatures }, (_, fi) => (
           <div
@@ -148,6 +156,16 @@ function TableRows({
 }
 
 // ─── Main page ─────────────────────────────────────────────────────────────
+
+// Feature labels for compare table
+const featureLabels = [
+  "מחיר",
+  "שיטת חימום",
+  "סוג שימוש",
+  "סוללה",
+  "תצוגה",
+  "אחריות",
+];
 
 export default function CompareClient() {
   // ✅ Init from the actual first product instead of a hardcoded id string,
@@ -264,20 +282,170 @@ export default function CompareClient() {
           />
         </div>
 
-        {/* ── Desktop: full 4-column table ── */}
+        {/* ── Desktop: feature comparison table ── */}
         <div className="hidden lg:block">
-          <TableRows
-            displayProducts={products}
-            selectedId={selectedId}
-            colClass="grid-cols-4"
-            onSelect={handleSelect}
-          />
+          <div
+            className="rounded-2xl overflow-hidden border"
+            style={{ borderColor: "rgba(255,255,255,0.07)" }}
+          >
+            {/* Product cards: image + name/price + select */}
+            <div className="grid grid-cols-5 gap-6">
+              {/* Empty spacer cell for feature label column */}
+              <div></div>
+              
+              {products.map((product, index) => {
+                const isSelected = product.id === selectedId;
+                return (
+                  <div
+                    key={product.id}
+                    className="flex flex-col border rounded-xl p-4"
+                    style={{
+                      borderColor: isSelected
+                        ? "#c6a87a"
+                        : "rgba(255,255,255,0.07)",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {/* Right border for all but last */}
+                    {index < products.length - 1 && (
+                      <div
+                        className="absolute top-0 bottom-0 right-0 w-px"
+                        style={{ background: "rgba(255,255,255,0.07)" }}
+                      />
+                    )}
+
+                    {/* Image */}
+                    <div className="relative w-full rounded-xl overflow-hidden h-[280px] mx-2 sm:mx-3 mt-2">
+                      <Image
+                        src={product.thumbnail ?? product.images?.[0] ?? "/assets/img/product-test-img.jpeg"}
+                        alt={product.name}
+                        fill
+                        className="object-contain p-1"
+                      />
+                    </div>
+
+                    {/* Name + price */}
+                    <div className="px-3 sm:px-4 pt-1 pb-0.5 text-start">
+                      <span
+                        className="font-light text-xl sm:text-2xl lg:text-3xl leading-snug"
+                        style={{ color: isSelected ? "#c6a87a" : "#ffffff" }}
+                      >
+                        {product.name}
+                      </span>
+
+                      <span className="block font-light text-4xl sm:text-4xl lg:text-4xl text-white">
+                        ₪{product.price}
+                      </span>
+                    </div>
+
+                    {/* Select button */}
+                    <div className="px-3 sm:px-12 py-2 mt-auto flex justify-center">
+                      <button
+                        onClick={() => handleSelect(product.id)}
+                        className="w-full max-w-[120px] sm:max-w-none sm:px-4 lg:px-6 py-1 rounded-full text-lg font-regular border transition-colors"
+                        style={
+                          isSelected
+                            ? {
+                              background: "var(--color-gold)",
+                              color: "#000000",
+                              borderColor: "transparent",
+                            }
+                            : {
+                              background: "transparent",
+                              borderColor: "rgba(255,255,255,0.2)",
+                              color: "#eeeeee",
+                            }
+                        }
+                      >
+                        {isSelected ? "✓ נבחר" : "בחר מוצר"}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Feature rows with labels - all in one table */}
+            <div className="mt-8">
+              {/* Features header row */}
+              <div
+                className="grid grid-cols-5 border-b"
+                style={{
+                  borderColor: "rgba(255,255,255,0.05)",
+                  background: "#0d0d0d",
+                }}
+              >
+                <div className="px-3 sm:px-4 py-2 flex items-center text-xl font-semibold" style={{ color: "#c6a87a" }}>
+                  תכונות
+                </div>
+                {/* Empty cells for the 4 product columns to maintain grid alignment */}
+                {Array.from({ length: 4 }, (_, i) => (
+                  <div key={i} className="py-2"></div>
+                ))}
+              </div>
+
+              {Array.from({ length: maxFeatures }, (_, fi) => (
+                <div
+                  key={fi}
+                  className="grid grid-cols-5 border-b last:border-b-0"
+                  style={{
+                    borderColor: "rgba(255,255,255,0.05)",
+                    background: fi % 2 === 0 ? "#0d0d0d" : "#111111",
+                  }}
+                >
+                  {/* Feature label - first column */}
+                  <div
+                    className="px-3 sm:px-4 py-2 text-start text-xl sm:text-xl font-medium relative"
+                    style={{
+                      borderColor: "rgba(255,255,255,0.05)",
+                      color: "#eeeeee",
+                    }}
+                  >
+                    {/* Right border */}
+                    <div
+                      className="absolute top-0 bottom-0 right-0 w-px"
+                      style={{ background: "rgba(255,255,255,0.05)" }}
+                    />
+                    {featureLabels[fi] ?? "—"}
+                  </div>
+
+                  {/* Feature values - remaining 4 columns */}
+                  {products.map((product, index) => {
+                    const isSelected = product.id === selectedId;
+                    return (
+                      <div
+                        key={product.id}
+                        className="px-3 sm:px-4 py-2 text-center text-xl sm:text-xl relative"
+                        style={{
+                          borderColor: "rgba(255,255,255,0.05)",
+                          color: "#eeeeee",
+                          opacity: isSelected ? 1 : 0.6,
+                          fontWeight: isSelected ? 400 : 300,
+                          background: isSelected ? "rgba(198,168,122,0.04)" : "transparent",
+                        }}
+                      >
+                        {/* Right border for all but last */}
+                        {index < products.length - 1 && (
+                          <div
+                            className="absolute top-0 bottom-0 right-0 w-px"
+                            style={{ background: "rgba(255,255,255,0.05)" }}
+                          />
+                        )}
+                        {product.features[fi] ?? "—"}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* CTA */}
         <div className="flex justify-center mt-8 sm:mt-10">
           <Link
-            href={`/shop/${selectedId}`}
+            href={productUrlMap[selectedId] || "/shop"}
             className="inline-flex items-center px-6 sm:px-8 py-3 sm:py-3.5 rounded-full text-sm sm:text-base font-semibold transition-opacity hover:opacity-85 text-black"
             style={{ background: "#c6a87a" }}
           >

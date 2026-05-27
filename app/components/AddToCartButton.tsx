@@ -8,9 +8,11 @@ interface Props {
   price: number;
   variantId: string;
   image?: string;
+  description?: string;
+  material?: string;
 }
 
-export default function AddToCartButton({ id, name, price, variantId, image }: Props) {
+export default function AddToCartButton({ id, name, price, variantId, image, description, material }: Props) {
   const { addItem } = useCart();
 
   return (
@@ -20,7 +22,7 @@ export default function AddToCartButton({ id, name, price, variantId, image }: P
       aria-label={`הוסף ${name} לעגלה`}
       onClick={(e) => {
         e.preventDefault();
-        addItem({ id, name, price, variantId, image });
+        addItem({ id, name, price, variantId, image, description, material });
       }}
     >
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
