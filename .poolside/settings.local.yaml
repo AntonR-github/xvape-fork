@@ -1,0 +1,9 @@
+tools:
+    shell:
+        allow:
+            - cd *
+            - npx tsc *
+paths:
+    allow:
+        - path: C:/Users/anton/Desktop/xvape/app/**
+          write: true

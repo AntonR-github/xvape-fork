@@ -294,19 +294,23 @@ button {
   }
 }
 
-/* Cart toast animation */
-@keyframes slide-in {
-  from {
-    transform: translateX(100%);
+/* Luxurious toast animation - centered */
+@keyframes toast-enter {
+  0% {
+    transform: translateY(20px) scale(0.95);
     opacity: 0;
   }
-  to {
-    transform: translateX(0);
+  60% {
+    transform: translateY(-5px) scale(1.01);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
     opacity: 1;
   }
 }
 
-.animate-slide-in {
-  animation: slide-in 0.3s ease-out;
+.animate-toast-enter {
+  animation: toast-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
