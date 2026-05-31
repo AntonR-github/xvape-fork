@@ -27,7 +27,7 @@ export default function TermsPage() {
 
                    {/* Page Title */}
             <div className="site-container max-w-4xl mx-auto mt-12 mb-8">
-              <h1 className="title-h2-black text-right">הצהרת נגישות</h1>
+              <h1 className="title-h2-black text-right">תנאי שימוש</h1>
               <div className="flex justify-right mt-4">
                 <div className="w-84 h-px bg-black"></div>
               </div>
