@@ -1,5 +1,8 @@
+'use client'
+
 import Link from "next/link";
 import Image from "next/image";
+import { FloatingWhatsApp } from '@digicroz/react-floating-whatsapp';
 
 const columns = [
   {
@@ -57,6 +60,14 @@ export default function Footer() {
           ))}
 
         </div>
+     <FloatingWhatsApp
+        phoneNumber="972542216300"
+        accountName="שירות לקוחות XVape"
+        placeholder="הקלד הודעה..."
+        chatMessage="שלום! במה אפשר לעזור לך היום?"
+        notification
+        notificationSound
+      />
 
         {/* Copyright */}
         <div
